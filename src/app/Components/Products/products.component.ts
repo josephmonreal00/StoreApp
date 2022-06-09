@@ -30,6 +30,8 @@ export class Products {
       error: (err) => console.log(err),
       complete: () => console.log('Complete'),
     });
+
+    // deserialize response correctly
   }
 
   createPost() {
