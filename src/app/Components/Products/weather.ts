@@ -3,7 +3,7 @@ import { WeatherDetails } from '../../Components/Products/WeatherDetails';
 export interface Weather {
   product: string;
   init: string;
-  dataseries: Array<WeatherDetails>;
+  dataseries: WeatherDetails[];
 }
 
 // "dataseries": [{

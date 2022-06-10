@@ -25,36 +25,38 @@ export class Products {
     'https://www.7timer.info/bin/astro.php?lon=113.2&lat=23.1&ac=0&unit=metric&output=json&tzshift=0';
   memes: Memes;
 
+  observablesMemes: Observable<Memes>;
   weather: Weather;
+  observableWeather: Observable<Weather>;
+  weatherDetails: WeatherDetails[];
 
   posts: Observable<Post[]>;
   products: string = 'Products';
   newPost: Observable<any>;
-  ngOnInIt() {
-    // console.log('ngon');
-    // this.getMemes().subscribe(
-    //   (data: Memes[]) => (this.memes = data),
-    //   (err: any) => console.log(err),
-    //   () => console.log('All done')
-    // );
-  }
 
   saveWeather(): void {
     this.getWeather().subscribe({
       next: (data: Weather) => {
         this.weather = data;
+        this.weatherDetails = data.dataseries;
         console.log(this.weather);
       },
       error: (err) => console.log(err),
       complete: () => console.log('weather complete'),
     });
 
-    console.log(this.weather.dataseries[0]);
+    console.log(this.weather.dataseries);
   }
 
   getWeather(): Observable<Weather> {
     console.log('getweather');
     let header = new HttpHeaders().set('Content-Type', 'application/json');
+
+    this.observableWeather = this.http.get<Weather>(this.WEATHERURL, {
+      headers: header,
+      responseType: 'json',
+    });
+
     return this.http.get<Weather>(this.WEATHERURL, {
       headers: header,
       responseType: 'json',
@@ -86,6 +88,10 @@ export class Products {
 
   getMemes(): Observable<Memes> {
     let header = new HttpHeaders().set('Content-Type', 'application/json');
+    this.observablesMemes = this.http.get<Memes>(this.MEMEURL, {
+      headers: header,
+      responseType: 'json',
+    });
 
     return this.http.get<Memes>(this.MEMEURL, {
       headers: header,
@@ -98,13 +104,11 @@ export class Products {
     let headers = new HttpHeaders().set('Authorization', 'auth-token');
 
     this.posts = this.http.get<Post[]>(this.ROOT_URL + '/posts', { params });
-    console.log(
-      this.posts.subscribe({
-        next: (post) => console.log(post),
-        error: (err) => console.log(err),
-        complete: () => console.log('finished'),
-      })
-    );
+    // this.posts.subscribe({
+    //   next: (post) => console.log(post),
+    //   error: (err) => console.log(err),
+    //   complete: () => console.log('finished'),
+    // });
   }
 
   createPost() {

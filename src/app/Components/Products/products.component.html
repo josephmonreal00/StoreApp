@@ -1,17 +1,19 @@
 <h3>Not Displaying</h3>
 <button (click)="getPosts()">Get Posts</button>
+<button (click)="getWeather()">Get Weather</button>
+<button (click)="saveWeather()">Save Weather</button>
+<button (click)="displayMemes()">Display Memes</button>
+<button (click)="createPost()">Create Post</button>
+{{ newPost | async | json }}
+
 <div *ngFor="let post of posts | async">
   {{ post | json }}
 </div>
 
-<button (click)="createPost()">Create Post</button>
-{{ newPost | async | json }}
+<div *ngFor="let w of weather.dataseries">
+  {{ w | json }}
+</div>
 
-<!-- <div *ngFor="let meme of memes.data.memes | async">
-  {{ meme | json }}
-</div> -->
-
-<button (click)="getWeather()">Get Weather</button>
-<button (click)="saveWeather()">Save Weather</button>
-
-<button (click)="displayMemes()">Display Memes</button>
+<div *ngFor="let m of memes.data.memes">
+  {{ m | json }}
+</div>
