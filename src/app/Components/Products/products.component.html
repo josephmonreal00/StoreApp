@@ -6,3 +6,10 @@
 
 <button (click)="createPost()">Create Post</button>
 {{ newPost | async | json }}
+
+<!-- <div *ngFor="let meme of memes.data.memes | async">
+  {{ meme | json }}
+</div> -->
+
+<button (click)="getWeather()">Get Weather</button>
+<button (click)="saveWeather()">Save Weather</button>
