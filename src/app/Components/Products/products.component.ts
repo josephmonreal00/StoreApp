@@ -1,7 +1,14 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpParams,
+  HttpHeaders,
+  HttpResponse,
+} from '@angular/common/http';
 import { Post } from './post';
 import { Observable, pipe, map, tap, take } from 'rxjs';
+import { Memes } from '../../Components/Products/memes';
+import { AMeme } from '../../Components/Products/ameme';
 
 @Component({
   selector: 'Products',
@@ -11,11 +18,10 @@ import { Observable, pipe, map, tap, take } from 'rxjs';
 export class Products {
   readonly ROOT_URL = 'https://jsonplaceholder.typicode.com';
   readonly MEMEURL = 'https://api.imgflip.com/get_memes';
-  memes: any;
+  memes: Memes;
   posts: Observable<Post[]>;
   products: string = 'Products';
   newPost: Observable<any>;
-  theMemes: any;
 
   constructor(private http: HttpClient) {}
 
@@ -25,11 +31,47 @@ export class Products {
 
     this.posts = this.http.get<Post[]>(this.ROOT_URL + '/posts', { params });
 
-    this.memes = this.http.get(this.MEMEURL).subscribe({
-      next: (meme) => console.log(meme),
-      error: (err) => console.log(err),
-      complete: () => console.log('Complete'),
-    });
+    let header = new HttpHeaders().set('Content-Type', 'application/json');
+
+    this.memes = this.http
+      .get<HttpResponse<Memes>>(this.MEMEURL, {
+        headers: header,
+        responseType: 'json',
+      })
+      .pipe(
+        map((item) => {
+          let data = item.ameme.data.memes[0];
+          console.log(item);
+        })
+      )
+      .subscribe({
+        next: (meme) => {
+          console.log(meme);
+        },
+        error: (err) => console.log(err),
+        complete: () => console.log('complete'),
+      });
+
+    // .subscribe(
+    //   (data) => {
+    //     var data_ = data;
+    //     console.log(data_);
+    //   },
+    //   (error) => {
+    //     throw error;
+    //   },
+    //   () => {
+    //     console.log('finished');
+    //   }
+    // );
+
+    // .subscribe({
+    //   next: (meme) => console.log(meme),
+    //   error: (err) => console.log(err),
+    //   complete: () => console.log('Complete'),
+    // });
+
+    // console.log(this.memes);
 
     // deserialize response correctly
   }
