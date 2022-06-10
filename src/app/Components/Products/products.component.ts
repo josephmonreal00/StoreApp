@@ -10,6 +10,7 @@ import { Observable, pipe, map, tap, take } from 'rxjs';
 import { Memes } from '../../Components/Products/memes';
 import { AMeme } from '../../Components/Products/ameme';
 import { WeatherDetails } from '../../Components/Products/WeatherDetails';
+import { Weather } from '../../Components/Products/weather';
 
 @Component({
   selector: 'Products',
@@ -23,7 +24,7 @@ export class Products {
     'https://www.7timer.info/bin/astro.php?lon=113.2&lat=23.1&ac=0&unit=metric&output=json&tzshift=0';
   memes: Memes[];
 
-  weather: WeatherDetails[];
+  weather: Weather;
 
   posts: Observable<Post[]>;
   products: string = 'Products';
@@ -39,7 +40,7 @@ export class Products {
 
   saveWeather(): void {
     this.getWeather().subscribe({
-      next: (data: WeatherDetails[]) => {
+      next: (data: Weather) => {
         this.weather = data;
         console.log(this.weather);
       },
@@ -47,15 +48,24 @@ export class Products {
       complete: () => console.log('weather complete'),
     });
 
-    console.log(this.weather);
+    console.log(this.weather.dataseries[0]);
   }
 
-  getWeather(): Observable<WeatherDetails[]> {
+  getWeather(): Observable<Weather> {
+    console.log('getweather');
     let header = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.get<WeatherDetails[]>(this.WEATHERURL, {
-      headers: header,
-      responseType: 'json',
-    });
+    return this.http
+      .get<Weather>(this.WEATHERURL, {
+        headers: header,
+        responseType: 'json',
+      })
+      .pipe(
+        map((data: Weather) => {
+          this.weather = <Weather>data; // should be allowed by typescript now
+          console.log(this.weather);
+          return data;
+        })
+      );
     // .pipe(map((response) => console.log(response)))
     // .subscribe({
     //   next: (weath) => console.log(weath),
