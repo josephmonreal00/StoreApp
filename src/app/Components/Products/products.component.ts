@@ -11,6 +11,7 @@ import { Memes } from '../../Components/Products/memes';
 import { AMeme } from '../../Components/Products/ameme';
 import { WeatherDetails } from '../../Components/Products/WeatherDetails';
 import { Weather } from '../../Components/Products/weather';
+import { Meme } from '../../Components/Products/meme';
 
 @Component({
   selector: 'Products',
@@ -22,7 +23,7 @@ export class Products {
   readonly MEMEURL = 'https://api.imgflip.com/get_memes';
   readonly WEATHERURL =
     'https://www.7timer.info/bin/astro.php?lon=113.2&lat=23.1&ac=0&unit=metric&output=json&tzshift=0';
-  memes: Memes[];
+  memes: Memes;
 
   weather: Weather;
 
@@ -54,37 +55,39 @@ export class Products {
   getWeather(): Observable<Weather> {
     console.log('getweather');
     let header = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http
-      .get<Weather>(this.WEATHERURL, {
-        headers: header,
-        responseType: 'json',
-      })
-      .pipe(
-        map((data: Weather) => {
-          this.weather = <Weather>data; // should be allowed by typescript now
-          console.log(this.weather);
-          return data;
-        })
-      );
-    // .pipe(map((response) => console.log(response)))
-    // .subscribe({
-    //   next: (weath) => console.log(weath),
-    //   error: (err) => console.log(err),
-    //   complete: () => console.log('weather complete'),
-    // });
-    // this.weather = this.http.get(this.WEATHERURL).subscribe({
-    //   next: (weather) => console.log(weather),
-    //   error: (err) => console.log(err),
-    //   complete: () => console.log('complete'),
-    // });
-    // console.log(this.weather);
+    return this.http.get<Weather>(this.WEATHERURL, {
+      headers: header,
+      responseType: 'json',
+    });
+    // Below is not necessary
+    // .pipe(
+    //   map((data: Weather) => {
+    //     this.weather = <Weather>data; // should be allowed by typescript now
+    //     console.log(this.weather);
+    //     return data;
+    //   })
+    // );
   }
 
   constructor(private http: HttpClient) {}
-  getMemes(): Observable<Memes[]> {
+
+  displayMemes(): void {
+    this.getMemes().subscribe({
+      next: (data: Memes) => {
+        this.memes = data;
+        console.log(this.memes);
+      },
+      error: (err) => console.log(err),
+      complete: () => console.log('meme complete'),
+    });
+
+    console.log(this.memes.data.memes[0]);
+  }
+
+  getMemes(): Observable<Memes> {
     let header = new HttpHeaders().set('Content-Type', 'application/json');
 
-    return this.http.get<Memes[]>(this.MEMEURL, {
+    return this.http.get<Memes>(this.MEMEURL, {
       headers: header,
       responseType: 'json',
     });
