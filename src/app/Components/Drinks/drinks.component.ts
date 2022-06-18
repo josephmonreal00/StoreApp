@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/core';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { DrinkModel } from './DrinkModel';
 import { Observable } from 'rxjs';
 
@@ -15,6 +15,17 @@ export class Drinks {
   constructor(private http: HttpClient) {}
   getDrinks(): Observable<DrinkModel> {
     let parameters = new HttpParams().set('s', 'margarita');
-    return this.http.get<DrinkModel>(this.URL, { params: parameters });
+    this.drinks = this.http.get<DrinkModel>(this.URL, { params: parameters });
+    return this.drinks;
+  }
+
+  printInformation(): void {
+    console.log(
+      this.drinks.subscribe({
+        next: (item) => console.log(item),
+        error: (err) => console.log(err),
+        complete: () => console.log('complete'),
+      })
+    );
   }
 }

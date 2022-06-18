@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { HelloComponent } from './hello.component';
-import { Drinks } from './Components/Drinks/Drinks.component';
+import { Drinks } from './Components/Drinks/drinks.component';
 import { Products } from './Components/Products/products.component';
 import { Footer } from './Components/Footer/footer.component';
 
