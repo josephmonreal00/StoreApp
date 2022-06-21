@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 export class Drinks {
   URL = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita';
   drinks: Observable<DrinkModel>;
+  theDrinks: any;
 
   constructor(private http: HttpClient) {}
   getDrinks(): Observable<DrinkModel> {
@@ -22,7 +23,9 @@ export class Drinks {
   printInformation(): void {
     console.log(
       this.drinks.subscribe({
-        next: (item) => console.log(item),
+        next: (item) => {
+          this.theDrinks = item.TheDrinks;
+        },
         error: (err) => console.log(err),
         complete: () => console.log('complete'),
       })

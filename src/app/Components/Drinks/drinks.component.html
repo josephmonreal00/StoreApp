@@ -1,2 +1,5 @@
 <button (click)="getDrinks()">Get Drinks</button>
 <button (click)="printInformation()">Print Information</button>
+<div *ngFor="let aDrink of theDrinks | async">
+  <span>{{ aDrink }}</span>
+</div>
