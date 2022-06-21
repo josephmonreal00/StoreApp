@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { DrinkModel } from './DrinkModel';
-import { Observable } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
+import { DrinkDetails } from '../../Components/Drinks/DrinkDetails';
 
 @Component({
   selector: 'drinks',
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs';
 export class Drinks {
   URL = 'https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita';
   drinks: Observable<DrinkModel>;
-  theDrinks: any;
+  drinkDets: Observable<DrinkDetails[]>;
 
   constructor(private http: HttpClient) {}
   getDrinks(): Observable<DrinkModel> {
@@ -21,14 +22,14 @@ export class Drinks {
   }
 
   printInformation(): void {
-    console.log(
-      this.drinks.subscribe({
-        next: (item) => {
-          this.theDrinks = item.TheDrinks;
-        },
-        error: (err) => console.log(err),
-        complete: () => console.log('complete'),
-      })
-    );
+    this.drinks.subscribe({
+      next: (item) => {
+        console.log('Item');
+        console.log(item.drinks);
+        this.drinkDets = of(item.drinks);
+      },
+      error: (err) => console.log(err),
+      complete: () => console.log('complete'),
+    });
   }
 }
