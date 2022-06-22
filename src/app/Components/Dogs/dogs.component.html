@@ -1,0 +1,4 @@
+<button (click)="displayDogs()">Display Dogs</button>
+<div *ngFor="let dog of displayDog | async">
+  {{ dog }}
+</div>
